@@ -15,8 +15,6 @@ from charms.observability_libs.v0.kubernetes_service_patch import KubernetesServ
 
 LOG = logging.getLogger(__name__)
 
-logging.basicConfig(level=logging.DEBUG)
-
 
 class RegistryCharm(CharmBase):
     """Charm for Docker registry service."""
