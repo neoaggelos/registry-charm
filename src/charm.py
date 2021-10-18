@@ -51,7 +51,6 @@ class RegistryCharm(CharmBase):
                 self.unit.status = MaintenanceStatus("Unit is updating")
                 container.add_layer("registry", layer, combine=True)
                 LOG.info("Added container layer to Pebble")
-                LOG.debug("Restarting registry service")
                 container.restart("registry")
                 LOG.info("Restarted")
 
