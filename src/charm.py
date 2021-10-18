@@ -29,6 +29,7 @@ class RegistryCharm(CharmBase):
         self.framework.observe(self.on.config_changed, self._on_config_changed)
         self.framework.observe(self.on.registry_pebble_ready, self._on_config_changed)
 
+        self.service_patcher = KubernetesServicePatch(self, [("http", 5000)])
 
     def _on_config_changed(self, _):
         container = self.unit.get_container("registry")
