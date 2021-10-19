@@ -17,7 +17,6 @@ class TestCharm(unittest.TestCase):
         self.harness = Harness(RegistryCharm)
         self.addCleanup(self.harness.cleanup)
         self.harness.begin()
-        self.harness.charm.ingress = MagicMock()
 
     def test_registry(self):
         # Check the initial Pebble plan is empty
@@ -51,9 +50,9 @@ class TestCharm(unittest.TestCase):
         self.assertEqual(self.harness.model.unit.status, ActiveStatus("Unit started"))
 
         # Ensure that service is not restarted when no config has changed
-        with patch("ops.model.Container.start") as _start, patch(
-            "ops.model.Container.stop"
-        ) as _stop:
+        container_start = "ops.model.Container.start"
+        container_stop = "ops.model.Container.stop"
+        with patch(container_start) as _start, patch(container_stop) as _stop:
             self.harness.charm.on.config_changed.emit()
             _start.assert_not_called()
             _stop.assert_not_called()
