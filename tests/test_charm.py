@@ -4,7 +4,7 @@
 # Learn more about testing at: https://juju.is/docs/sdk/testing
 
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from charm import RegistryCharm
 from ops.model import ActiveStatus
@@ -17,6 +17,7 @@ class TestCharm(unittest.TestCase):
         self.harness = Harness(RegistryCharm)
         self.addCleanup(self.harness.cleanup)
         self.harness.begin()
+        self.harness.charm.ingress = MagicMock()
 
     def test_registry(self):
         # Check the initial Pebble plan is empty
@@ -63,4 +64,18 @@ class TestCharm(unittest.TestCase):
         self.assertEqual(
             plan["services"]["registry"]["environment"]["REGISTRY_HTTP_PREFIX"],
             "/prefix/",
+        )
+
+    def test_hostname_config(self):
+        self.harness.charm.ingress = MagicMock()
+        self.harness.update_config({"external-hostname": "my-registry"})
+        self.harness.charm.ingress.update_config.assert_called_once_with(
+            {"service-hostname": "my-registry"}
+        )
+
+    def test_empty_hostname_config(self):
+        self.harness.charm.ingress = MagicMock()
+        self.harness.update_config({"external-hostname": ""})
+        self.harness.charm.ingress.update_config.assert_called_once_with(
+            {"service-hostname": self.harness.charm.app.name}
         )
