@@ -1,0 +1,20 @@
+name: Charm build
+
+on: [push]
+
+jobs:
+  test:
+    name: Test Charm Build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v1
+      - name: Install Charmcraft
+        run: sudo snap install charmcraft --classic
+      - name: Initialize LXD
+        run: |
+          sudo groupadd --force --system lxd
+          sudo usermod -a -G lxd $USER
+          sudo lxd init --auto
+      - name: Build charm
+        run: sg lxd -c 'charmcraft build -v'
