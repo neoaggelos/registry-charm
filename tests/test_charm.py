@@ -46,8 +46,16 @@ class TestCharm(unittest.TestCase):
             "registry"
         )
         self.assertTrue(service.is_running())
-        # Ensure we set an ActiveStatus with no message
+        # Ensure we set an ActiveStatus
         self.assertEqual(self.harness.model.unit.status, ActiveStatus("Unit started"))
+
+        # Ensure that service is not restarted when no config has changed
+        with patch("ops.model.Container.start") as _start, patch(
+            "ops.model.Container.stop"
+        ) as _stop:
+            self.harness.charm.on.config_changed.emit()
+            _start.assert_not_called()
+            _stop.assert_not_called()
 
     def test_prefix_config(self):
         self.harness.update_config({"prefix": "/prefix/"})
