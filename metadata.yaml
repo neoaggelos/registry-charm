@@ -27,3 +27,7 @@ storage:
   registry-storage:
     type: filesystem
     location: /var/lib/registry
+
+requires:
+  ingress:
+    interface: ingress

@@ -12,3 +12,10 @@ options:
     default: ''
     description: Registry HTTP URL prefix
     type: string
+
+  external-hostname:
+    default: ''
+    description: |
+      The external hostname to configure for the Ingress resource. If
+      unset, the application name will be used instead.
+    type: string
