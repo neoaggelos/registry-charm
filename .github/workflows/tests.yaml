@@ -1,9 +1,9 @@
-name: Unit Tests
+name: Charm test
 
 on: [push]
 
 jobs:
-  test:
+  unit-tests:
     name: Unit Tests
     runs-on: ubuntu-20.04
     steps:
@@ -13,7 +13,43 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-      - name: Install dependencies
-        run: pip install -r requirements-dev.txt
+      - name: Install tox
+        run: pip install tox
+      - name: Lint code
+        run: tox -e lint
       - name: Run unit tests
-        run: ./run_tests
+        run: tox -e test
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v1
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install tox
+        run: pip install tox
+      - name: Install microk8s
+        run: |
+          sudo snap install microk8s --classic
+          sudo microk8s status --wait-ready
+          sudo microk8s enable storage dns ingress
+          sudo usermod -a -G microk8s $USER
+      - name: Install juju
+        run: |
+          sudo snap install juju --classic
+      - name: Bootstrap Juju controller
+        run: |
+          sg microk8s -c 'juju bootstrap microk8s'
+      - name: Install Charmcraft
+        run: sudo snap install charmcraft --classic
+      - name: Initialize LXD
+        run: |
+          sudo groupadd --force --system lxd
+          sudo usermod -a -G lxd $USER
+          sudo lxd init --auto
+      - name: Run integration tests
+        run: sg lxd -c 'tox -e opstest'
