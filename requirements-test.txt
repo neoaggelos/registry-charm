@@ -1,0 +1,2 @@
+juju
+pytest-operator < 0.9
