@@ -19,6 +19,24 @@ The registry is exposed at port 5000 of the `registry` service.
 
 TODO.
 
+## Tests
+
+Run unit tests.
+
+```bash
+pip install tox
+tox -e lint
+tox -e test
+tox -e opstest
+```
+
+To run integration tests, Charmcraft and Juju is required. Juju must have a controller bootstrap on a Kubernetes cloud.
+
+```bash
+./scripts/setup_charmcraft.sh
+./scripts/setup_juju.sh
+```
+
 ## OCI Images
 
 - [Docker Registry](https://hub.docker.com/_/registry/)
