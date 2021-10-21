@@ -7,7 +7,7 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 from charm import RegistryCharm
-from ops.model import ActiveStatus
+from ops.model import ActiveStatus, WaitingStatus
 from ops.testing import Harness
 
 
@@ -78,3 +78,11 @@ class TestCharm(unittest.TestCase):
         self.harness.charm.ingress.update_config.assert_called_once_with(
             {"service-hostname": self.harness.charm.app.name}
         )
+
+    def test_container_not_read(self):
+        with patch("ops.model.Container.can_connect") as can_connect:
+            can_connect.return_value = False
+            self.harness.charm.on.config_changed.emit()
+            self.assertEqual(
+                self.harness.model.unit.status, WaitingStatus("Waiting for Pebble")
+            )
