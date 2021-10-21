@@ -19,3 +19,18 @@ jobs:
         run: tox -e lint
       - name: Run unit tests
         run: tox -e test
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v1
+      - name: Setup operator environment
+        uses: charmed-kubernetes/actions-operator@main
+        with:
+          provider: microk8s
+      - name: Configure kubectl
+        run: sg microk8s -c "microk8s config > ~/.kube/config"
+      - name: Run integration tests
+        run: sg microk8s -c "tox -e opstest -- --model testing"
