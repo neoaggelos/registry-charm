@@ -25,6 +25,7 @@ async def test_using_charm(ops_test: OpsTest):
         try:
             LOG.info("Trying %s", path)
             req = urlopen(path, timeout=5)
+            break
         except Exception as e:
             LOG.warning("Exception %s, retry", e)
 
