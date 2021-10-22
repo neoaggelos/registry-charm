@@ -37,7 +37,7 @@ class RegistryCharm(CharmBase):
             {
                 "service-hostname": self.service_hostname(),
                 "service-name": self.app.name,
-                "service-port": 80,
+                "service-port": 5000,
             },
         )
 
