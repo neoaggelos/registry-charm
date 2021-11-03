@@ -53,5 +53,5 @@ jobs:
         if: failure()
 
       - name: Get juju logs
-        run: juju debug-log
+        run: juju debug-log --replay
         if: failure()
