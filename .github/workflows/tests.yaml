@@ -27,9 +27,10 @@ jobs:
       - name: Git checkout
         uses: actions/checkout@v1
       - name: Setup operator environment
-        uses: charmed-kubernetes/actions-operator@main
+        uses: neoaggelos/actions-operator@retry-microk8s-bootstrap
         with:
           provider: microk8s
+          channel: 1.19
       - name: Configure kubectl
         run: sg microk8s -c "microk8s config > ~/.kube/config"
       - name: Run integration tests
