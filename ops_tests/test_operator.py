@@ -29,5 +29,6 @@ async def test_using_charm(ops_test: OpsTest):
         except Exception as e:
             LOG.warning("Exception %s, retry", e)
 
+    assert req is not None
     assert req.code == 200
     assert json.loads(req.read()) == {"repositories": []}
