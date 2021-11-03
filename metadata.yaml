@@ -15,7 +15,7 @@ containers:
   registry:
     resource: registry-image
     mounts:
-      - storage: registry-storage
+      - storage: registry
         location: /var/lib/registry
 
 resources:
@@ -24,7 +24,7 @@ resources:
     description: OCI image for registry (registry:2)
 
 storage:
-  registry-storage:
+  registry:
     type: filesystem
     location: /var/lib/registry
 
