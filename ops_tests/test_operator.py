@@ -1,4 +1,5 @@
 import json
+from time import sleep
 from urllib.request import urlopen
 
 import pytest
@@ -28,6 +29,7 @@ async def test_using_charm(ops_test: OpsTest):
             break
         except Exception as e:
             LOG.warning("Exception %s, retry", e)
+            sleep(2)
 
     assert req is not None
     assert req.code == 200
